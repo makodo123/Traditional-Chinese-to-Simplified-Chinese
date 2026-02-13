@@ -17,7 +17,7 @@
 
 ## 🎯 線上體驗
 
-**立即使用：** [https://makodo123.github.io/TtoS/](https://makodo123.github.io/TtoS/)
+**立即使用：** [https://makodo123.github.io/Traditional-Chinese-to-Simplified-Chinese/](https://makodo123.github.io/Traditional-Chinese-to-Simplified-Chinese/)
 
 ## 🛠️ 技術架構
 
