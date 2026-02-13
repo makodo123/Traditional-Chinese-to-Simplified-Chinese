@@ -1,4 +1,4 @@
-# 繁簡轉換器 (TtoS)
+# 繁簡轉換器 (Traditional Chinese to Simplified Chinese)
 
 一個簡潔、美觀、高效的線上繁體中文轉簡體中文工具。
 
