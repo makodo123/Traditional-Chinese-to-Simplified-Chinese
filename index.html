@@ -6,12 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>繁簡轉換器 | 繁體中文轉簡體中文</title>
     <meta name="description" content="免費線上繁體中文轉換簡體中文工具，一鍵複製，支援手機與電腦。">
+    
+    <!-- SEO優化 -->
+    <meta name="keywords" content="繁簡轉換,繁體轉簡體,中文轉換,簡繁轉換器,線上轉換">
+    <meta name="author" content="TtoS">
+    <link rel="canonical" href="https://makodo123.github.io/TtoS/">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="繁簡轉換器 | 免費線上轉換工具">
+    <meta property="og:description" content="免費、快速、隱私安全的繁體中文轉簡體中文工具">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://makodo123.github.io/TtoS/">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>繁</text></svg>">
+    
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- Fonts with display=swap for better performance -->
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA support (optional) -->
+    <meta name="theme-color" content="#0c0e14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
 <body>
@@ -43,15 +67,16 @@
                             </button>
                         </div>
                     </div>
-                    <textarea id="inputText" placeholder="在此輸入或貼上繁體中文文字..." spellcheck="false"></textarea>
+                    <textarea id="inputText" placeholder="在此輸入或貼上繁體中文文字..." spellcheck="false" maxlength="10000"></textarea>
                     <div class="panel-footer">
                         <span id="inputCount" class="char-count">0 字</span>
+                        <span class="char-limit">/ 10000</span>
                     </div>
                 </div>
 
                 <div class="divider">
                     <div class="divider-line"></div>
-                    <button id="convertBtn" class="btn-convert" title="轉換">
+                    <button id="convertBtn" class="btn-convert" title="轉換" aria-label="執行繁簡轉換">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -89,16 +114,22 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- 快捷鍵提示 -->
+            <div class="shortcuts-hint">
+                💡 快捷鍵：<kbd>Ctrl</kbd> + <kbd>Enter</kbd> 轉換
+            </div>
         </main>
 
         <footer class="footer">
-            <p>支援桌面與行動裝置 · 資料不離開您的瀏覽器</p>
+            <p>支援桌面與行動裝置 · 資料不離開您的瀏覽器 · <a href="https://github.com/makodo123/TtoS" target="_blank" rel="noopener">GitHub</a></p>
         </footer>
     </div>
 
-    <div id="toast" class="toast" aria-live="polite"></div>
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/t2cn.js"></script>
+    <!-- Load OpenCC async for better performance -->
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/t2cn.js" async></script>
     <script src="script.js"></script>
 </body>
 

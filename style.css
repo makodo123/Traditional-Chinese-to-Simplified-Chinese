@@ -476,3 +476,90 @@ textarea:focus-visible {
     outline: none;
     box-shadow: inset 0 0 0 1px var(--accent-glow);
 }
+
+/* === 新增優化樣式 === */
+
+/* 字數限制提示 */
+.char-limit {
+    color: var(--text-placeholder);
+    font-size: 0.7rem;
+    margin-left: 0.3rem;
+}
+
+/* 快捷鍵提示 */
+.shortcuts-hint {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.shortcuts-hint kbd {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    margin: 0 0.15rem;
+}
+
+/* Footer 連結 */
+.footer a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.footer a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Loading state */
+.output-area.loading::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 優化滾動條 (Firefox) */
+textarea,
+.output-area {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+/* 選取文字顏色 */
+::selection {
+    background: var(--accent-glow);
+    color: var(--text);
+}
+
+/* 提升無障礙性 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode 優化 (如果系統設置) */
+@media (prefers-color-scheme: light) {
+    /* 可以在此添加淺色模式支持 */
+}

@@ -1,5 +1,5 @@
 /* ========================================
-   繁簡轉換器 — Script
+   繁簡轉換器 — Script (優化版)
    ======================================== */
 
 (function () {
@@ -16,7 +16,23 @@
     const toast = document.getElementById('toast');
 
     // OpenCC converter: Traditional (tw) → Simplified (cn)
-    const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+    let converter = null;
+    let isConverterReady = false;
+
+    // Wait for OpenCC to load
+    function initConverter() {
+        if (typeof OpenCC !== 'undefined') {
+            converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+            isConverterReady = true;
+            console.log('✅ OpenCC converter ready');
+        } else {
+            // Retry if OpenCC not loaded yet
+            setTimeout(initConverter, 100);
+        }
+    }
+
+    // Start initialization
+    initConverter();
 
     // ── Conversion ──────────────────────────
     let debounceTimer = null;
@@ -32,14 +48,63 @@
             return;
         }
 
-        const result = converter(raw);
-        outputText.textContent = result;
-        outputCount.textContent = `${result.length} 字`;
+        if (!isConverterReady) {
+            outputText.innerHTML = '<span class="placeholder-text">⏳ 載入轉換引擎中...</span>';
+            return;
+        }
+
+        try {
+            const result = converter(raw);
+            outputText.textContent = result;
+            outputCount.textContent = `${result.length} 字`;
+            
+            // Save to localStorage for recovery
+            saveToLocalStorage(raw, result);
+        } catch (error) {
+            console.error('Conversion error:', error);
+            showToast('❌ 轉換失敗，請重試');
+        }
     }
 
     function debouncedConvert() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(convert, 80);
+    }
+
+    // ── Local Storage (Auto-save) ───────────
+    const STORAGE_KEY = 'ttos_last_conversion';
+
+    function saveToLocalStorage(input, output) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                input,
+                output,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            // Quota exceeded or disabled
+            console.warn('LocalStorage save failed:', e);
+        }
+    }
+
+    function loadFromLocalStorage() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                // Only restore if less than 24 hours old
+                if (Date.now() - data.timestamp < 86400000) {
+                    inputText.value = data.input || '';
+                    if (data.output) {
+                        outputText.textContent = data.output;
+                        outputCount.textContent = `${data.output.length} 字`;
+                    }
+                    inputCount.textContent = `${(data.input || '').length} 字`;
+                }
+            }
+        } catch (e) {
+            console.warn('LocalStorage load failed:', e);
+        }
     }
 
     // ── Events ──────────────────────────────
@@ -58,6 +123,23 @@
         inputCount.textContent = '0 字';
         outputCount.textContent = '0 字';
         inputText.focus();
+        localStorage.removeItem(STORAGE_KEY);
+    });
+
+    // ── Keyboard Shortcuts ──────────────────
+    document.addEventListener('keydown', (e) => {
+        // Ctrl+Enter or Cmd+Enter: Convert
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            convert();
+            showToast('⚡ 快速轉換完成');
+        }
+        
+        // Escape: Clear
+        if (e.key === 'Escape' && document.activeElement === inputText) {
+            e.preventDefault();
+            clearBtn.click();
+        }
     });
 
     // ── Copy to clipboard ───────────────────
@@ -72,6 +154,9 @@
             await navigator.clipboard.writeText(text);
             showToast('✅ 已複製到剪貼簿', true);
             setCopiedState(true);
+            
+            // Track analytics (optional)
+            trackEvent('copy', { length: text.length });
         } catch {
             // Fallback
             fallbackCopy(text);
@@ -125,5 +210,26 @@
             toast.classList.remove('show');
         }, 2200);
     }
+
+    // ── Analytics (Simple) ──────────────────
+    function trackEvent(action, data) {
+        // Optional: integrate Google Analytics or other
+        console.log(`[Analytics] ${action}:`, data);
+    }
+
+    // ── Initialize ──────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+        loadFromLocalStorage();
+        trackEvent('page_load', { referrer: document.referrer });
+    });
+
+    // ── PWA Install Prompt (Optional) ───────
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show custom install button if desired
+        console.log('PWA install available');
+    });
 
 })();
