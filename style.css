@@ -486,25 +486,48 @@ textarea:focus-visible {
     margin-left: 0.3rem;
 }
 
-/* 快捷鍵提示 */
+/* 快捷鍵提示（增強版）*/
 .shortcuts-hint {
     text-align: center;
-    margin-top: 1rem;
-    padding: 0.6rem;
-    font-size: 0.82rem;
+    margin-top: 1.25rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(108, 138, 255, 0.05), rgba(167, 139, 250, 0.05));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+
+.shortcuts-title {
+    font-size: 0.85rem;
     color: var(--text-muted);
-    opacity: 0.7;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.shortcuts-list {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.shortcuts-list span {
+    white-space: nowrap;
 }
 
 .shortcuts-hint kbd {
     display: inline-block;
-    padding: 0.15rem 0.4rem;
+    padding: 0.2rem 0.5rem;
     background: var(--surface-hover);
     border: 1px solid var(--border);
     border-radius: 4px;
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
-    margin: 0 0.15rem;
+    margin: 0 0.1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: var(--accent);
+    font-weight: 600;
 }
 
 /* Footer 連結 */
@@ -562,4 +585,63 @@ textarea,
 /* Dark mode 優化 (如果系統設置) */
 @media (prefers-color-scheme: light) {
     /* 可以在此添加淺色模式支持 */
+}
+
+/* 字數警告顏色 */
+.char-count.warning {
+    color: #fbbf24 !important;
+}
+
+.char-count.danger {
+    color: #f59e0b !important;
+    font-weight: 600;
+}
+
+/* 字數統計動畫 */
+.char-count {
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.char-count:hover {
+    transform: scale(1.05);
+}
+
+/* 歷史記錄按鈕（可選，未來功能）*/
+.history-btn {
+    position: fixed;
+    bottom: 5rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+}
+
+.history-btn:hover {
+    background: var(--accent);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px var(--accent-glow);
+}
+
+/* 響應式快捷鍵提示 */
+@media (max-width: 700px) {
+    .shortcuts-list {
+        gap: 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .shortcuts-hint kbd {
+        padding: 0.15rem 0.35rem;
+        font-size: 0.7rem;
+    }
 }
